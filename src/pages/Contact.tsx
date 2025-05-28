@@ -8,8 +8,7 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-// הוספנו Linkedin והסרנו את User אם הוא לא בשימוש במקום אחר
-import { Mail, Linkedin } from "lucide-react"; 
+import { Mail, Linkedin } from "lucide-react";
 import { useToast } from "../hooks/use-toast"; // ודא שהנתיב נכון
 
 const Contact = () => {
@@ -17,7 +16,7 @@ const Contact = () => {
     name: "",
     email: "",
     message: "",
-    "bot-field": "", 
+    "bot-field": "",
   });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,24 +32,21 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     const form = e.currentTarget;
-
     try {
-      await fetch("/", { 
+      await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({
-          "form-name": form.getAttribute("name") || "contact", 
+          "form-name": form.getAttribute("name") || "contact",
           ...formData,
         }),
       });
-
       toast({
         title: "Message sent!",
         description: "Thank you for your message. I'll get back to you soon!",
       });
-      setFormData({ name: "", email: "", message: "", "bot-field": "" }); 
+      setFormData({ name: "", email: "", message: "", "bot-field": "" });
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -72,19 +68,27 @@ const Contact = () => {
     });
   };
 
+  // הגדרת קלאסים משותפת לשדות הקלט
+  const inputClassName =
+    "bg-background/80 dark:bg-neutral-800 text-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring dark:focus-visible:ring-primary";
+
   return (
-    <section id="contact" className="py-20 bg-secondary/30">
+    <section
+      id="contact"
+      className="py-20 bg-secondary/30 dark:bg-secondary/50"
+    >
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="gradient-text">Get In Touch</span>
           </h2>
         </div>
-
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Info */}
           <div className="space-y-8">
-            <Card className="glass">
+            <Card className="glass dark:border-neutral-700">
+              {" "}
+              {/* הוספת גבול לכרטיס במצב חשוך לדוגמה */}
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
                   <Mail className="h-6 w-6 text-primary" />
@@ -100,27 +104,25 @@ const Contact = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-primary" />
-                    {/* אפשר להפוך גם את המייל לקישור mailto אם תרצה */}
                     <span>ofek.amirav@gmail.com</span>
                   </div>
-                  {/* --- שורת הלינקדאין המעודכנת --- */}
                   <div className="flex items-center gap-3">
-                    <Linkedin className="h-5 w-5 text-primary" /> {/* אייקון לינקדאין */}
+                    <Linkedin className="h-5 w-5 text-primary" />
                     <a
-                      href="https://www.linkedin.com/in/ofek-amirav" // הנחתי שזה הקישור הנכון
+                      href="https://www.linkedin.com/in/ofek-amirav"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:underline hover:text-primary transition-colors" // סגנון לקישור
+                      className="hover:underline hover:text-primary transition-colors"
                     >
                       linkedin.com/in/ofek-amirav
                     </a>
                   </div>
-                  {/* --- סוף שורת הלינקדאין המעודכנת --- */}
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="glass">
+            <Card className="glass dark:border-neutral-700">
+              {" "}
+              {/* הוספת גבול לכרטיס במצב חשוך לדוגמה */}
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">
                   What I Can Help With
@@ -136,7 +138,9 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <Card className="glass">
+          <Card className="glass dark:border-neutral-700">
+            {" "}
+            {/* הוספת גבול לכרטיס במצב חשוך לדוגמה */}
             <CardHeader>
               <CardTitle>Send a Message</CardTitle>
             </CardHeader>
@@ -153,7 +157,11 @@ const Contact = () => {
                 <div className="hidden">
                   <label>
                     Don’t fill this out if you’re human:{" "}
-                    <input name="bot-field" value={formData["bot-field"]} onChange={handleChange} />
+                    <input
+                      name="bot-field"
+                      value={formData["bot-field"]}
+                      onChange={handleChange}
+                    />
                   </label>
                 </div>
                 <div>
@@ -163,7 +171,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="bg-background/50"
+                    className={inputClassName} // שימוש בקלאס המשותף
                   />
                 </div>
                 <div>
@@ -174,7 +182,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="bg-background/50"
+                    className={inputClassName} // שימוש בקלאס המשותף
                   />
                 </div>
                 <div>
@@ -185,7 +193,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     rows={5}
-                    className="bg-background/50"
+                    className={inputClassName} // שימוש בקלאס המשותף
                   />
                 </div>
                 <Button
