@@ -5,63 +5,86 @@ import ProfileIntro from "./ProfileIntro"; // ודא שהנתיב נכון
 
 const IntroTextContent = () => {
   return (
+    // Div חיצוני: קובע את רוחב הקונטיינר הכללי (50% במסך גדול),
+    // ריווחים פנימיים (padding), מיקום אנכי (justify-center),
+    // ואיך ה-Div הפנימי (innerWrapper) מיושר בתוכו (items-center / lg:items-start).
+    // גם יישור הטקסט נקבע כאן ומועבר בירושה.
     <div
-      className="w-full lg:w-[50%] flex flex-col justify-center items-center
-                 px-6 sm:px-12 lg:px-20 text-center lg:text-left 
-                 py-3 sm:py-6 md:py-8 lg:py-12 {/* <--- הוקטן מ-py-4 ל-py-3 לבסיס */}
-                 gap-2 sm:gap-3 md:gap-4 lg:gap-6"
+      className="w-full lg:w-[50%] flex flex-col justify-center 
+                 items-center lg:items-start   {/* מיישר את ה-innerWrapper עצמו */}
+                 text-center lg:text-left     {/* יישור טקסט שעובר בירושה לילדים של innerWrapper */}
+                 px-6 sm:px-12 lg:px-20 
+                 py-3 sm:py-6 md:py-8 lg:py-12"
+      // ה-gap הוסר מכאן, הוא יועבר ל-div הפנימי
     >
-      <motion.h1
-        className="inline-block 
-                   text-3xl sm:text-4xl lg:text-5xl
-                   font-bold 
-                   mb-1 sm:mb-2 lg:mb-4
-                   bg-gradient-to-r from-green-600 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
+      {/* Div פנימי: מגביל את הרוחב המקסימלי של כל תוכן הטקסט 
+          ומסדר את האלמנטים הפנימיים (כותרות, פסקה, כפתור) עם flex ו-gap. */}
+      <div
+        className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl 
+                   flex flex-col 
+                   items-center lg:items-start {/* מיישר את הילדים שלו (H1, H2, P, div של הכפתור) */}
+                   gap-2 sm:gap-3 md:gap-4 lg:gap-6" // הרווחים בין הילדים שלו
       >
-        Hello,
-      </motion.h1>
-
-      <motion.h2
-        className="text-xl sm:text-2xl md:text-3xl lg:text-4xl
-                   font-semibold 
-                   mb-1 sm:mb-1 md:mb-1 lg:mb-2
-                   text-gray-900 dark:text-gray-200"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-      >
-        I'm Ofek Amirav
-      </motion.h2>
-      <motion.p
-        className="text-sm sm:text-base lg:text-lg
-                   text-gray-700 dark:text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-      >
-        Junior Android & Full-Stack Developer passionate about building
-        innovative applications. Skilled in Kotlin, Android, and various
-        full-stack technologies, with a constant drive to learn and evolve.
-      </motion.p>
-      <motion.div className="mt-2 sm:mt-2 md:mt-3 lg:mt-4">
-        <button
-          onClick={() =>
-            document
-              .getElementById("projects")
-              ?.scrollIntoView({ behavior: "smooth", block: "start" })
-          }
-          className="bg-gradient-to-r from-green-700 to-blue-500 text-white hover:from-blue-500 hover:to-green-700 
-                     font-semibold 
-                     py-2 px-4 sm:py-2.5 sm:px-6 lg:py-3 lg:px-8
-                     rounded-lg shadow-md transition duration-300 
-                     text-xs sm:text-sm md:text-md lg:text-lg"
+        <motion.h1
+          className="inline-block text-3xl sm:text-4xl lg:text-5xl font-bold 
+                     bg-gradient-to-r from-green-600 via-blue-500 to-purple-500 bg-clip-text text-transparent"
+          // הוסר mb-* (margin-bottom), ה-gap יטפל ברווח
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
         >
-          View My Projects
-        </button>
-      </motion.div>
+          Hello,
+        </motion.h1>
+
+        <motion.h2
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold 
+                     text-gray-900 dark:text-gray-200"
+          // הוסר mb-*
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+        >
+          I'm Ofek Amirav
+        </motion.h2>
+
+        <motion.p
+          className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+          // הוסרו mx-auto, lg:mx-0, וכל הגדרות max-w-* מכאן,
+          // מכיוון שה-div הפנימי שעוטף אותם כבר מטפל בזה.
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+        >
+          Junior Android & Full-Stack Developer passionate about building
+          innovative applications. Skilled in Kotlin, Android, and various
+          full-stack technologies, with a constant drive to learn and evolve.
+        </motion.p>
+
+        <motion.div
+          // הוסר mt-* (margin-top)
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          // ה-div הזה הוא flex item בתוך ה-innerWrapper.
+          // ה-items-center / lg:items-start של ה-innerWrapper יישרו אותו.
+          // וה-text-center / lg:text-left של ה-innerWrapper (שעבר בירושה) יישר את הכפתור שבתוכו.
+        >
+          <button
+            onClick={() =>
+              document
+                .getElementById("projects")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+            className="bg-gradient-to-r from-green-700 to-blue-500 text-white hover:from-blue-500 hover:to-green-700 
+                       font-semibold 
+                       py-2 px-4 sm:py-2.5 sm:px-6 lg:py-3 lg:px-8
+                       rounded-lg shadow-md transition duration-300 
+                       text-xs sm:text-sm md:text-md lg:text-lg"
+          >
+            View My Projects
+          </button>
+        </motion.div>
+      </div>
     </div>
   );
 };
@@ -116,7 +139,6 @@ const StickyPhone = () => {
             <ProfileIntro variant="initial" />
           </motion.div>
 
-          {/* --- השינוי כאן בגדלי הטלפון --- */}
           <motion.div
             className="relative 
                        w-[180px] h-[360px]          {/* ברירת מחדל (הקטנה נוספת) */}
@@ -129,7 +151,6 @@ const StickyPhone = () => {
               scale: phoneScale,
             }}
           >
-            {/* --- סוף השינוי בגדלי הטלפון --- */}
             <div className="absolute inset-0 rounded-[2rem] sm:rounded-[2.5rem] border-[10px] sm:border-[12px] border-gray-700 dark:border-gray-600 bg-white dark:bg-gray-900 shadow-2xl z-10 flex flex-col items-center overflow-hidden pt-4 sm:pt-6">
               <div className="w-4 h-4 bg-gray-800 dark:bg-gray-700 rounded-full mb-3 opacity-80" />
               <motion.div
