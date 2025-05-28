@@ -4,29 +4,63 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
+} from "../components/ui/card"; // ודא שהנתיבים נכונים
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { Mail, User } from "lucide-react";
-import { useToast } from "../hooks/use-toast";
+// הוספנו Linkedin והסרנו את User אם הוא לא בשימוש במקום אחר
+import { Mail, Linkedin } from "lucide-react"; 
+import { useToast } from "../hooks/use-toast"; // ודא שהנתיב נכון
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
+    "bot-field": "", 
   });
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const encode = (data: { [key: string]: string | number | boolean }) => {
+    return Object.keys(data)
+      .map(
+        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
+      )
+      .join("&");
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Simulate form submission
-    toast({
-      title: "Message sent!",
-      description: "Thank you for your message. I'll get back to you soon!",
-    });
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+
+    try {
+      await fetch("/", { 
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({
+          "form-name": form.getAttribute("name") || "contact", 
+          ...formData,
+        }),
+      });
+
+      toast({
+        title: "Message sent!",
+        description: "Thank you for your message. I'll get back to you soon!",
+      });
+      setFormData({ name: "", email: "", message: "", "bot-field": "" }); 
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast({
+        title: "Error sending message",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -66,12 +100,22 @@ const Contact = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-primary" />
+                    {/* אפשר להפוך גם את המייל לקישור mailto אם תרצה */}
                     <span>ofek.amirav@gmail.com</span>
                   </div>
+                  {/* --- שורת הלינקדאין המעודכנת --- */}
                   <div className="flex items-center gap-3">
-                    <User className="h-5 w-5 text-primary" />
-                    <span>LinkedIn: /in/ofek-amirav</span>
+                    <Linkedin className="h-5 w-5 text-primary" /> {/* אייקון לינקדאין */}
+                    <a
+                      href="https://www.linkedin.com/in/ofek-amirav" // הנחתי שזה הקישור הנכון
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline hover:text-primary transition-colors" // סגנון לקישור
+                    >
+                      linkedin.com/in/ofek-amirav
+                    </a>
                   </div>
+                  {/* --- סוף שורת הלינקדאין המעודכנת --- */}
                 </div>
               </CardContent>
             </Card>
@@ -97,7 +141,21 @@ const Contact = () => {
               <CardTitle>Send a Message</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                name="contact"
+                method="POST"
+                data-netlify="true"
+                data-netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                <input type="hidden" name="form-name" value="contact" />
+                <div className="hidden">
+                  <label>
+                    Don’t fill this out if you’re human:{" "}
+                    <input name="bot-field" value={formData["bot-field"]} onChange={handleChange} />
+                  </label>
+                </div>
                 <div>
                   <Input
                     name="name"
@@ -108,7 +166,6 @@ const Contact = () => {
                     className="bg-background/50"
                   />
                 </div>
-
                 <div>
                   <Input
                     name="email"
@@ -120,7 +177,6 @@ const Contact = () => {
                     className="bg-background/50"
                   />
                 </div>
-
                 <div>
                   <Textarea
                     name="message"
@@ -132,12 +188,12 @@ const Contact = () => {
                     className="bg-background/50"
                   />
                 </div>
-
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full bg-gradient-to-r from-green-700 to-blue-500 text-white hover:from-blue-500 hover:to-green-700"
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </CardContent>

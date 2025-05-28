@@ -11,10 +11,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       {/* Enable React Router for navigation */}
       <App />
       {/* Footer */}
-      <footer className="py-8 border-t border-border/50">
+      <footer className="py-8 border-t border-border/50 dark:border-border-dark bg-background dark:bg-background-dark">
         <div className="container mx-auto px-6 text-center">
           <p className="text-muted-foreground text-gray-400">
-            © 2025 Ofek Amirav. This portfolio create using React & Tailwind CSS
+            © 2025 Ofek Amirav.
+            <br />
+            Built with React & Tailwind CSS.
           </p>
         </div>
       </footer>
