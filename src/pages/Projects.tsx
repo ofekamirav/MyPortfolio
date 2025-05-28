@@ -50,8 +50,7 @@ const Projects = () => {
       title: "Portfolio Website",
       description:
         "A modern, responsive portfolio website with dark mode and smooth animations.",
-      image:
-        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=500&h=300&fit=crop",
+      image: "/assets/portfolio-website.png",
       technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
       liveUrl: "#",
       githubUrl: "#",
@@ -61,8 +60,7 @@ const Projects = () => {
       title: "QuiverSync App",
       description:
         "QuiverSync helps surfers optimize their gear by uploading their surfboards and receiving compatibility scores for each board based on wave forecasts and location data, using the Google Gemini API and surf prediction APIs. The app also features a peer-to-peer surfboard rental system for users who don't have the right board for upcoming conditions.",
-      image:
-        "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=500&h=300&fit=crop",
+      image: "/assets/QuiverSync.png",
       technologies: [
         "KMP",
         "Jetpack Compose",
