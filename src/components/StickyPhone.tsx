@@ -5,20 +5,14 @@ import ProfileIntro from "./ProfileIntro"; // ודא שהנתיב נכון
 
 const IntroTextContent = () => {
   return (
-    // Div חיצוני: קובע את רוחב הקונטיינר הכללי (50% במסך גדול),
-    // ריווחים פנימיים (padding), מיקום אנכי (justify-center),
-    // ואיך ה-Div הפנימי (innerWrapper) מיושר בתוכו (items-center / lg:items-start).
-    // גם יישור הטקסט נקבע כאן ומועבר בירושה.
     <div
       className="w-full lg:w-[50%] flex flex-col justify-center 
-                 items-center lg:items-start   {/* מיישר את ה-innerWrapper עצמו */}
-                 text-center lg:text-left     {/* יישור טקסט שעובר בירושה לילדים של innerWrapper */}
+                 items-center lg:items-start  
+                 text-center lg:text-left    
                  px-6 sm:px-12 lg:px-20 
                  py-3 sm:py-6 md:py-8 lg:py-12"
-      // ה-gap הוסר מכאן, הוא יועבר ל-div הפנימי
     >
-      {/* Div פנימי: מגביל את הרוחב המקסימלי של כל תוכן הטקסט 
-          ומסדר את האלמנטים הפנימיים (כותרות, פסקה, כפתור) עם flex ו-gap. */}
+    
       <div
         className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl 
                    flex flex-col 
@@ -28,7 +22,6 @@ const IntroTextContent = () => {
         <motion.h1
           className="inline-block text-3xl sm:text-4xl lg:text-5xl font-bold 
                      bg-gradient-to-r from-green-600 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-          // הוסר mb-* (margin-bottom), ה-gap יטפל ברווח
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
@@ -39,7 +32,6 @@ const IntroTextContent = () => {
         <motion.h2
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold 
                      text-gray-900 dark:text-gray-200"
-          // הוסר mb-*
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
@@ -49,8 +41,6 @@ const IntroTextContent = () => {
 
         <motion.p
           className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
-          // הוסרו mx-auto, lg:mx-0, וכל הגדרות max-w-* מכאן,
-          // מכיוון שה-div הפנימי שעוטף אותם כבר מטפל בזה.
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
@@ -61,13 +51,9 @@ const IntroTextContent = () => {
         </motion.p>
 
         <motion.div
-          // הוסר mt-* (margin-top)
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          // ה-div הזה הוא flex item בתוך ה-innerWrapper.
-          // ה-items-center / lg:items-start של ה-innerWrapper יישרו אותו.
-          // וה-text-center / lg:text-left של ה-innerWrapper (שעבר בירושה) יישר את הכפתור שבתוכו.
         >
           <button
             onClick={() =>
