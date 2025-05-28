@@ -3,14 +3,13 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import ProfileIntro from "./ProfileIntro"; // ודא שהנתיב נכון
 
-// IntroTextContent נשאר כפי שהיה בתשובה הקודמת (הגרסה הקומפקטית)
 const IntroTextContent = () => {
   return (
     <div
-      className="w-full lg:w-[50%] flex flex-col justify-center 
-                   px-6 sm:px-12 lg:px-20 text-center lg:text-left 
-                   py-4 sm:py-6 md:py-8 lg:py-12
-                   gap-2 sm:gap-3 md:gap-4 lg:gap-6"
+      className="w-full lg:w-[50%] flex flex-col justify-center items-center
+                 px-6 sm:px-12 lg:px-20 text-center lg:text-left 
+                 py-3 sm:py-6 md:py-8 lg:py-12 {/* <--- הוקטן מ-py-4 ל-py-3 לבסיס */}
+                 gap-2 sm:gap-3 md:gap-4 lg:gap-6"
     >
       <motion.h1
         className="inline-block 
@@ -47,12 +46,7 @@ const IntroTextContent = () => {
         innovative applications. Skilled in Kotlin, Android, and various
         full-stack technologies, with a constant drive to learn and evolve.
       </motion.p>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        className="mt-2 sm:mt-2 md:mt-3 lg:mt-4"
-      >
+      <motion.div className="mt-2 sm:mt-2 md:mt-3 lg:mt-4">
         <button
           onClick={() =>
             document
@@ -125,10 +119,10 @@ const StickyPhone = () => {
           {/* --- השינוי כאן בגדלי הטלפון --- */}
           <motion.div
             className="relative 
-                       w-[200px] h-[400px]          {/* ברירת מחדל (למסכים קטנים מאוד) */}
-                       sm:w-[220px] sm:h-[440px]   {/* מסכים קטנים */}
-                       md:w-[250px] md:h-[500px]   {/* מסכים בינוניים */}
-                       lg:w-[300px] lg:h-[600px]   {/* מסכים גדולים (כשזה לצד הטקסט) */}
+                       w-[180px] h-[360px]          {/* ברירת מחדל (הקטנה נוספת) */}
+                       sm:w-[200px] sm:h-[400px]   {/* מסכים קטנים */}
+                       md:w-[220px] md:h-[440px]   {/* מסכים בינוניים */}
+                       lg:w-[300px] lg:h-[600px]   {/* מסכים גדולים (לתצוגה רוחבית) */}
                        z-20"
             style={{
               opacity: phoneOpacity,

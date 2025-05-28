@@ -81,24 +81,36 @@ const AboutSection = () => {
                   {career.description}
                 </p>
                 {career.roles && (
-                  <div className="flex items-center justify-start gap-4 mb-4 overflow-x-auto">
-                    {career.roles.map((role, index) => (
-                      <div key={index} className="flex items-center gap-2">
+                  // --- התאמות לחלק של התפקידים ---
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-start gap-2 sm:gap-3 mb-4 sm:overflow-x-auto pb-1">
+                    {/* - flex-col sm:flex-row: עמודה במובייל, שורה ממסכי sm ומעלה.
+                      - items-start sm:items-center: יישור להתחלה בעמודה, למרכז בשורה.
+                      - gap-2 sm:gap-3: רווח קטן יותר בעמודה.
+                      - sm:overflow-x-auto: גלילה אופקית רק ממסכי sm ומעלה (אם צריך).
+                      - pb-1: פדינג תחתון קטן כדי שהגלילה לא תחתוך צל של נקודות.
+                    */}
+                    {career.roles.map((role, roleIndex) => (
+                      <div
+                        key={roleIndex}
+                        className="flex items-center gap-2 py-1 sm:py-0"
+                      >
+                        {" "}
+                        {/* py-1 sm:py-0 לריווח אנכי קטן במובייל */}
                         {/* נקודה */}
-                        <div className="w-3 h-3 bg-primary rounded-full border-2 border-background" />
-
+                        <div className="w-3 h-3 bg-primary rounded-full border-2 border-background flex-shrink-0" />{" "}
+                        {/* flex-shrink-0 למניעת כיווץ הנקודה */}
                         {/* שם התפקיד */}
                         <span className="text-sm text-muted-foreground whitespace-nowrap">
                           {role}
                         </span>
-
-                        {/* קו מחבר */}
-                        {index < career.roles.length - 1 && (
-                          <div className="w-6 h-0.5 bg-black/50 dark:bg-white" />
+                        {/* קו מחבר - מוסתר במובייל (כשהם אחד מתחת לשני) */}
+                        {roleIndex < career.roles.length - 1 && (
+                          <div className="hidden sm:block w-6 h-0.5 bg-black/50 dark:bg-white" />
                         )}
                       </div>
                     ))}
                   </div>
+                  // --- סוף התאמות לחלק של התפקידים ---
                 )}
 
                 <div className="flex flex-wrap gap-2">
