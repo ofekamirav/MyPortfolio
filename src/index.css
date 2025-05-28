@@ -1,0 +1,32 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900; 
+  }
+  .dark body { 
+    @apply bg-gray-900 text-gray-100; 
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    @apply text-white;
+  }
+  .dark p {
+    @apply text-gray-300;
+  }
+  .dark a {
+    @apply text-blue-400 hover:text-blue-300;
+  }
+  html {
+  scroll-behavior: smooth;
+}
+.gradient-text {
+  @apply bg-gradient-to-r from-green-700 to-blue-500 bg-clip-text text-transparent;
+}
+  .gradient-text:hover {
+    @apply bg-gradient-to-r from-green-600 to-blue-400;
+  }
+}
