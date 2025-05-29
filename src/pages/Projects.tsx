@@ -41,11 +41,10 @@ const Projects = () => {
         "ROOM",
         "LiveData",
       ],
-      liveUrl: "#",
+      liveUrl: "https://youtube.com/shorts/DOYsdSXpadM?feature=share",
       githubUrl: "https://github.com/ofekamirav/ChargehoodApp",
       featured: false,
     },
-
     {
       title: "Portfolio Website",
       description:
@@ -92,7 +91,7 @@ const Projects = () => {
           {projects.map((project, index) => (
             <Card
               key={index}
-              className={`glass hover:shadow-xl transition-all duration-300 hover:scale-105 ${
+              className={`glass hover:shadow-xl transition-all duration-300 hover:scale-105 flex flex-col ${
                 project.featured ? "lg:col-span-2" : ""
               }`}
             >
@@ -113,32 +112,61 @@ const Projects = () => {
                 <CardTitle className="text-xl">{project.title}</CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground">{project.description}</p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, techIndex) => (
-                    <Badge
-                      key={techIndex}
-                      variant="outline"
-                      className="text-xs bg-gradient-to-r from-green-500/10 to-blue-500/10 border-blue-500/20"
-                    >
-                      {tech}
-                    </Badge>
-                  ))}
+              <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
+                <div>
+                  <p className="text-muted-foreground mb-4">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech, techIndex) => (
+                      <Badge
+                        key={techIndex}
+                        variant="outline"
+                        className="text-xs bg-gradient-to-r from-green-500/10 to-blue-500/10 border-blue-500/20"
+                      >
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="flex gap-3 pt-2">
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-gradient-to-r from-green-700 to-blue-500 text-white hover:from-blue-500 hover:to-green-700"
-                  >
-                    Live Demo
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex-1">
-                    View Code
-                  </Button>
-                </div>
+                {((project.liveUrl && project.liveUrl !== "#") ||
+                  (project.githubUrl && project.githubUrl !== "#")) && (
+                  <div className="flex gap-3 pt-4">
+                    {project.liveUrl && project.liveUrl !== "#" && (
+                      <Button
+                        asChild
+                        size="sm"
+                        className="flex-1 bg-gradient-to-r from-green-700 to-blue-500 text-white hover:from-blue-500 hover:to-green-700"
+                      >
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Live Demo
+                        </a>
+                      </Button>
+                    )}
+
+                    {project.githubUrl && project.githubUrl !== "#" && (
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="flex-1"
+                      >
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View Code
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
