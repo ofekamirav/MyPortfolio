@@ -49,7 +49,7 @@ const Projects = () => {
       title: "RecipeHub Website",
       description:
         "A modern, responsive recipes community website with smooth animations and AI-generated recipes.",
-      image: "/assets/Recipehub.png",
+      image: "/assets/Reciphub.png",
       technologies: [
         "React",
         "TypeScript",
