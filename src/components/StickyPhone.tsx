@@ -12,7 +12,6 @@ const IntroTextContent = () => {
                  px-6 sm:px-12 lg:px-20 
                  py-3 sm:py-6 md:py-8 lg:py-12"
     >
-    
       <div
         className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl 
                    flex flex-col 
