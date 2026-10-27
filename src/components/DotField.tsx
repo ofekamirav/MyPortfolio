@@ -16,8 +16,15 @@ const cssColor = (name: string) =>
  * Samples a shape into home positions for the dots.
  * Without an image it draws the "o." mark; with one, dark pixels become dots
  * (bigger where darker), so a high-contrast portrait on a light background reads well.
+ * In dark mode the dots are light, so a cut-out portrait flips to sizing dots by
+ * brightness; otherwise it would read as a photo negative.
  */
-function sample(w: number, h: number, image: HTMLImageElement | null): Omit<Dot, "x" | "y" | "vx" | "vy">[] {
+function sample(
+  w: number,
+  h: number,
+  image: HTMLImageElement | null,
+  dark: boolean
+): Omit<Dot, "x" | "y" | "vx" | "vy">[] {
   const off = document.createElement("canvas");
   off.width = w;
   off.height = h;
@@ -43,6 +50,17 @@ function sample(w: number, h: number, image: HTMLImageElement | null): Omit<Dot,
   }
 
   const data = c.getImageData(0, 0, w, h).data;
+  // A cut-out portrait (transparent background) marks exactly where the person is,
+  // so even the lightest skin gets a dot and the outline of the face stays whole
+  let cutout = false;
+  if (image) {
+    for (let i = 3; i < data.length; i += 4 * 97) {
+      if (data[i] === 0) {
+        cutout = true;
+        break;
+      }
+    }
+  }
   const dots: Omit<Dot, "x" | "y" | "vx" | "vy">[] = [];
   const gap = image ? IMAGE_GAP : GAP;
   for (let y = gap / 2; y < h; y += gap) {
@@ -56,7 +74,9 @@ function sample(w: number, h: number, image: HTMLImageElement | null): Omit<Dot,
       const alpha = data[i + 3] / 255;
       const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
       // For a photo, a curve keeps skin light and lets eyes, brows and hair stand out
-      const ink = image ? alpha * Math.pow(1 - lum, 1.35) : alpha;
+      // (light dots in dark mode: lit skin gets the big dots, shadows the small ones)
+      const tone = dark && cutout ? Math.pow(lum, 2.2) : Math.pow(1 - lum, 1.35);
+      const ink = image ? alpha * (cutout ? Math.max(0.14, tone) : tone) : alpha;
       if (ink < (image ? 0.08 : 0.18)) continue;
       dots.push({ hx: x, hy: y, r: image ? 0.45 + ink * 2.6 : 2.2, accent: false });
     }
@@ -133,7 +153,7 @@ export default function DotField({ image, className }: { image?: string | null; 
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const homes = sample(w, h, img);
+      const homes = sample(w, h, img, document.documentElement.classList.contains("dark"));
       const first = dots.length === 0;
       dots = homes.map((home, i) => {
         const prev = dots[i];
@@ -165,10 +185,12 @@ export default function DotField({ image, className }: { image?: string | null; 
     });
     onScreen.observe(wrap);
 
-    // Re-read the theme colors when light/dark mode flips
+    // When light/dark mode flips, re-read the colors and, for a portrait,
+    // re-sample it so the dots flow into the mapping for the new theme
     const theme = new MutationObserver(() => {
       colors = { fg: cssColor("--fg"), accent: cssColor("--accent") };
-      draw();
+      if (img) build();
+      else draw();
     });
     theme.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 

@@ -135,9 +135,11 @@ export const aiSkills = [
 
 /**
  * Image for the hero's dot field. Leave null to draw the "o." mark.
- * For a portrait: a square, high-contrast black-and-white image on a plain
- * light background (about 800px), e.g. asset("portrait.png"). Dark pixels
- * become dots, larger where darker.
+ * For a portrait: a square, black-and-white PNG of about 800px, e.g.
+ * asset("portrait.png"). Dark pixels become dots, larger where darker.
+ * Best with a transparent background (cut out): then every point on the
+ * person gets a dot, so light skin doesn't vanish. A plain white background
+ * also works, but the lightest areas drop out.
  */
 export const heroPortrait: string | null = asset("portrait.png");
 
