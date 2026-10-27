@@ -100,9 +100,12 @@ export default function AgentFlow() {
 
         {/* travelling token */}
         <motion.circle
+          cx={0}
+          cy={0}
           r={7}
           fill={C}
-          animate={{ cx: tokenX, cy: tokenY, opacity: [0, 1, 1, 1, 1, 1, 0] }}
+          initial={{ x: tokenX[0], y: tokenY[0], opacity: 0 }}
+          animate={{ x: tokenX, y: tokenY, opacity: [0, 1, 1, 1, 1, 1, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.6 }}
         />
 

@@ -47,11 +47,28 @@ function useActiveSection(ids: string[]) {
   return active;
 }
 
+/** True once the hero's big name has scrolled up behind the navbar. */
+function usePastHeroName() {
+  const [past, setPast] = useState(false);
+  useEffect(() => {
+    const name = document.querySelector("#top h1");
+    if (!name) return;
+    const observer = new IntersectionObserver(
+      ([e]) => setPast(!e.isIntersecting && e.boundingClientRect.top < 0),
+      { rootMargin: "-64px 0px 0px 0px" }
+    );
+    observer.observe(name);
+    return () => observer.disconnect();
+  }, []);
+  return past;
+}
+
 const ids = navLinks.map((l) => l.id);
 
 export default function Navbar() {
   const { dark, toggle } = useTheme();
   const active = useActiveSection(ids);
+  const showLogo = usePastHeroName();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -75,12 +92,23 @@ export default function Navbar() {
       }`}
     >
       <nav className="container-x flex h-16 items-center justify-between">
-        <a
+        {/* Wordmark ending in the accent dot used by the section headings.
+            Hidden while the hero shows the name; stays in the layout so the links don't shift. */}
+        <motion.a
           href="#top"
-          className="font-medium tracking-tight transition-opacity hover:opacity-60"
+          aria-label="Ofek Amirav, back to top"
+          aria-hidden={!showLogo}
+          tabIndex={showLogo ? 0 : -1}
+          initial={false}
+          animate={showLogo ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.35, ease }}
+          className={`group text-xl font-medium tracking-tightest ${showLogo ? "" : "pointer-events-none"}`}
         >
-          Ofek Amirav
-        </a>
+          ofek
+          <span className="inline-block text-accent transition-transform duration-300 ease-out group-hover:-translate-y-1">
+            .
+          </span>
+        </motion.a>
 
         <div className="flex items-center gap-1 sm:gap-2">
           {navLinks.map((link) => (

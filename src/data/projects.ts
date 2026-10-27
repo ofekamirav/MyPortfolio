@@ -15,6 +15,9 @@ export type Project = {
   imagePosition?: string;
   stack: string[];
   demoUrl?: string;
+  websiteUrl?: string;
+  playStoreUrl?: string;
+  appStoreUrl?: string;
   codeUrl?: string;
   /** Shown instead of links when there is nothing public to open */
   status?: string;
@@ -32,7 +35,9 @@ export const projects: Project[] = [
     image: asset("QuiverSync.png"),
     imagePosition: "center 45%",
     stack: ["Kotlin Multiplatform", "Compose", "SwiftUI", "Firestore", "Next.js"],
-    status: "Live on Google Play & App Store",
+    websiteUrl: "https://quiversync.app",
+    playStoreUrl: "https://play.google.com/store/apps/details?id=com.quiversync.app",
+    appStoreUrl: "https://apps.apple.com/app/id6762154301",
     type: "Multiplatform",
   },
   {

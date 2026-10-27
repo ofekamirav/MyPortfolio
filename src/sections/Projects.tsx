@@ -61,8 +61,14 @@ function ProjectImage({ project }: { project: Project }) {
     setHover(false);
   };
 
-  const href = project.demoUrl ?? project.codeUrl;
-  const label = project.demoUrl ? "Watch demo" : project.codeUrl ? "View code" : null;
+  const href = project.demoUrl ?? project.websiteUrl ?? project.codeUrl;
+  const label = project.demoUrl
+    ? "Watch demo"
+    : project.websiteUrl
+      ? "Visit site"
+      : project.codeUrl
+        ? "View code"
+        : null;
   const Tag = href ? motion.a : motion.div;
 
   return (
@@ -125,7 +131,14 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.5"] });
   const fill = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  const hasLinks = project.demoUrl || project.codeUrl;
+  // The first link is the primary one; the rest are shown muted
+  const links = [
+    { label: "Watch demo", href: project.demoUrl },
+    { label: "Website", href: project.websiteUrl },
+    { label: "Google Play", href: project.playStoreUrl },
+    { label: "App Store", href: project.appStoreUrl },
+    { label: "Source", href: project.codeUrl },
+  ].filter((l): l is { label: string; href: string } => !!l.href);
 
   return (
     <article
@@ -194,36 +207,37 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
             ))}
           </ul>
 
-          <Reveal delay={0.5} y={10} className="mt-auto flex gap-6 pt-8 text-sm">
-            {hasLinks ? (
-              <>
-                {project.demoUrl && (
+          <Reveal delay={0.5} y={10} className="mt-auto flex flex-wrap gap-x-6 gap-y-3 pt-8 text-sm">
+            {links.length > 0 ? (
+              links.map((link, i) =>
+                i === 0 ? (
                   <a
-                    href={project.demoUrl}
+                    key={link.label}
+                    href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="link-underline font-medium"
                   >
-                    Watch demo
+                    {link.label}
                     <ArrowUpRight
                       size={14}
                       style={{ color: project.color }}
                       className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                     />
                   </a>
-                )}
-                {project.codeUrl && (
+                ) : (
                   <a
-                    href={project.codeUrl}
+                    key={link.label}
+                    href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="link-underline text-muted transition-colors hover:text-fg"
                   >
-                    Source
+                    {link.label}
                     <ArrowUpRight size={14} />
                   </a>
-                )}
-              </>
+                )
+              )
             ) : (
               <span className="inline-flex items-center gap-2 font-mono text-xs text-muted">
                 <span className="relative flex h-1.5 w-1.5">
