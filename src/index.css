@@ -1,32 +1,71 @@
-/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-white text-gray-900; 
+  :root {
+    --bg: 250 250 249;
+    --fg: 10 10 10;
+    --muted: 107 107 107;
+    --line: 231 229 228;
+    --surface: 242 241 239;
+    --accent: 22 163 74;
+    color-scheme: light;
   }
-  .dark body { 
-    @apply bg-gray-900 text-gray-100; 
+
+  .dark {
+    --bg: 11 11 12;
+    --fg: 237 237 237;
+    --muted: 138 138 138;
+    --line: 34 34 36;
+    --surface: 20 20 22;
+    --accent: 61 220 132;
+    color-scheme: dark;
   }
-  
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-    @apply text-white;
-  }
-  .dark p {
-    @apply text-gray-300;
-  }
-  .dark a {
-    @apply text-blue-400 hover:text-blue-300;
-  }
+
   html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans transition-colors duration-500;
+  }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
+  ::selection {
+    @apply bg-accent/25;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }
-.gradient-text {
-  @apply bg-gradient-to-r from-green-700 to-blue-500 bg-clip-text text-transparent;
-}
-  .gradient-text:hover {
-    @apply bg-gradient-to-r from-green-600 to-blue-400;
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12 xl:px-16;
+  }
+
+  .label {
+    @apply font-mono text-xs uppercase tracking-[0.14em] text-muted;
+  }
+
+  /* Underline that draws in from the left on hover */
+  .link-underline {
+    @apply relative inline-flex items-center gap-1;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-300 ease-out;
+  }
+  .link-underline:hover::after {
+    @apply origin-left scale-x-100;
   }
 }

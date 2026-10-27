@@ -1,131 +1,162 @@
-import { useState, useEffect } from "react";
-import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
-import { Sun, Moon, Menu, X } from "lucide-react"; // הוספתי אייקונים לתפריט מובייל
+import { useEffect, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
+import { Moon, Sun } from "lucide-react";
+import { ease } from "./Reveal";
 
-const Navbar = () => {
-  const [theme, setTheme] = useState("light");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const navLinks = [
+  { id: "work", label: "Work" },
+  { id: "stack", label: "Stack" },
+  { id: "contact", label: "Contact" },
+];
 
+function useTheme() {
+  const [dark, setDark] = useState(() =>
+    document.documentElement.classList.contains("dark")
+  );
+  const toggle = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    try {
+      localStorage.setItem("theme", next ? "dark" : "light");
+    } catch {}
+  };
+  return { dark, toggle };
+}
+
+function useActiveSection(ids: string[]) {
+  const [active, setActive] = useState<string | null>(null);
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") || "system";
-    const isSystemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    if (storedTheme === "dark" || (storedTheme === "system" && isSystemDark)) {
-      document.documentElement.classList.add("dark");
-      setTheme("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark");
-    localStorage.setItem("theme", newTheme);
-  };
-
-  const scrollToTop = () => {
-    scroll.scrollToTop({
-      duration: 800, 
-      smooth: "easeInOutCubic", 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => e.isIntersecting && setActive(e.target.id));
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
-    setIsMobileMenuOpen(false); 
-  };
+    return () => observer.disconnect();
+  }, [ids]);
+  return active;
+}
 
-  const navLinks = [
-    { to: "home", label: "Home" },
-    { to: "about", label: "About" },
-    { to: "projects", label: "Projects" },
-    { to: "contact", label: "Contact" },
-  ];
+/** True once the hero's name has shrunk into the navbar (or scrolled past it). */
+function usePastHeroName() {
+  const [past, setPast] = useState(false);
+  useEffect(() => {
+    const name = document.querySelector("[data-hero-name]");
+    if (!name) return;
+    const observer = new IntersectionObserver(
+      ([e]) => setPast(!e.isIntersecting && e.boundingClientRect.top < 64),
+      { rootMargin: "-64px 0px 0px 0px" }
+    );
+    observer.observe(name);
+    return () => observer.disconnect();
+  }, []);
+  return past;
+}
 
-  const navLinkProps = {
-    spy: true,
-    smooth: true,
-    offset: -90, 
-    duration: 500,
-  };
+const ids = navLinks.map((l) => l.id);
+
+export default function Navbar() {
+  const { dark, toggle } = useTheme();
+  const active = useActiveSection(ids);
+  const showLogo = usePastHeroName();
+  const { scrollY } = useScroll();
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Hide while scrolling down, reveal on the way back up. While the hero name
+  // is shrinking into the logo the bar stays put and transparent, so the name
+  // never slides under its blur, and it stays until the hero has scrolled away
+  // so the logo that just arrived doesn't vanish right away.
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    const heroHeight = document.getElementById("top")?.offsetHeight ?? 160;
+    setHidden(showLogo && y > prev && y > heroHeight);
+    setScrolled(y > 12);
+  });
+  // Combined at render time, so the bar turns solid as soon as the logo
+  // arrives, even if scrolling had already stopped (e.g. after a jump link)
+  const solid = showLogo && scrolled;
 
   return (
-    <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm px-4 sm:px-6 lg:px-8 py-3 sticky top-0 z-50 transition-colors duration-300 ease-in-out">
-      <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
-        {/* שמאל: לוגו/שם */}
-
-        <h1
-          className="text-2xl md:text-3xl font-bold cursor-pointer bg-gradient-to-r from-green-600 via-blue-500 to-purple-500 bg-clip-text text-transparent"
-          onClick={scrollToTop}
-          title="Scroll to top"
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: hidden ? -80 : 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease }}
+      className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-300 ${
+        solid
+          ? "border-b border-line/70 bg-bg/75 backdrop-blur-md"
+          : "border-b border-transparent"
+      }`}
+    >
+      <nav className="container-x flex h-16 items-center justify-between">
+        {/* Wordmark ending in the accent dot used by the section headings.
+            Hidden while the hero shows the name; stays in the layout so the links don't shift. */}
+        <motion.a
+          href="#top"
+          data-nav-logo
+          aria-label="Ofek Amirav, back to top"
+          aria-hidden={!showLogo}
+          tabIndex={showLogo ? 0 : -1}
+          initial={false}
+          animate={showLogo ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.35, ease }}
+          className={`group text-xl font-medium tracking-tightest ${showLogo ? "" : "pointer-events-none"}`}
         >
-          OA
-        </h1>
+          ofek
+          <span className="inline-block text-accent transition-transform duration-300 ease-out group-hover:-translate-y-1">
+            .
+          </span>
+        </motion.a>
 
-        {/* מרכז: קישורי ניווט (מוסתרים במובייל, מופיעים במסכים גדולים) */}
-        <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {navLinks.map((link) => (
-            <ScrollLink
-              key={link.to}
-              to={link.to}
-              {...navLinkProps}
-              className="px-3 lg:px-4 py-2 rounded-md text-sm font-medium cursor-pointer text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200 ease-in-out"
-              activeClass="font-semibold text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-gray-800 shadow-sm"
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              className={`relative px-2.5 py-1.5 text-sm transition-colors sm:px-3 ${
+                active === link.id ? "text-fg" : "text-muted hover:text-fg"
+              }`}
             >
               {link.label}
-            </ScrollLink>
-          ))}
-        </div>
-
-        {/* ימין: כפתור Theme וכפתור תפריט מובייל */}
-        <div className="flex items-center">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors duration-200"
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-yellow-400" />
-            ) : (
-              <Moon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            )}
-          </button>
-
-          {/* כפתור תפריט מובייל (מופיע רק במסכים קטנים) */}
-          <div className="md:hidden ml-2">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none transition-colors"
-              aria-label="Open menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
+              {active === link.id && (
+                <motion.span
+                  layoutId="nav-dot"
+                  className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
               )}
-            </button>
-          </div>
-        </div>
-      </div>
+            </a>
+          ))}
 
-      {/* תפריט מובייל נפתח (מופיע רק כשהוא פתוח ובמסכים קטנים) */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-900 shadow-lg py-2 z-40">
-          <div className="flex flex-col items-center space-y-2">
-            {navLinks.map((link) => (
-              <ScrollLink
-                key={link.to}
-                to={link.to}
-                {...navLinkProps}
-                className="block w-full text-center px-4 py-3 text-md font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                activeClass="font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-gray-800"
-                onClick={() => setIsMobileMenuOpen(false)} // סגור תפריט בלחיצה
+          <button
+            onClick={toggle}
+            aria-label="Toggle theme"
+            className="ml-1 grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-surface hover:text-fg"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={dark ? "sun" : "moon"}
+                initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.6 }}
+                transition={{ duration: 0.25 }}
               >
-                {link.label}
-              </ScrollLink>
-            ))}
-          </div>
+                {dark ? <Sun size={16} /> : <Moon size={16} />}
+              </motion.span>
+            </AnimatePresence>
+          </button>
         </div>
-      )}
-    </nav>
+      </nav>
+    </motion.header>
   );
-};
-
-export default Navbar;
+}
