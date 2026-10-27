@@ -102,6 +102,9 @@ export const projects: Project[] = [
 
 /** Top row of the skills band */
 export const skills = [
+  "Android",
+  "iOS",
+  "Kotlin",
   "Python",
   "TypeScript",
   "Kotlin Multiplatform",
@@ -120,6 +123,8 @@ export const skills = [
 export const aiSkills = [
   "LangGraph",
   "LangChain",
+  "State Management",
+  "RAG",
   "MCP",
   "Tool Calling",
   "Structured Outputs",
@@ -127,6 +132,14 @@ export const aiSkills = [
   "Guardrails",
   "Prompt Engineering",
 ];
+
+/**
+ * Image for the hero's dot field. Leave null to draw the "o." mark.
+ * For a portrait: a square, high-contrast black-and-white image on a plain
+ * light background (about 800px), e.g. asset("portrait.png"). Dark pixels
+ * become dots, larger where darker.
+ */
+export const heroPortrait: string | null = asset("portrait.png");
 
 export const links = {
   email: "ofek.amirav@gmail.com",

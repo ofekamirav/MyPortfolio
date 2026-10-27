@@ -47,14 +47,14 @@ function useActiveSection(ids: string[]) {
   return active;
 }
 
-/** True once the hero's big name has scrolled up behind the navbar. */
+/** True once the hero's name has shrunk into the navbar (or scrolled past it). */
 function usePastHeroName() {
   const [past, setPast] = useState(false);
   useEffect(() => {
-    const name = document.querySelector("#top h1");
+    const name = document.querySelector("[data-hero-name]");
     if (!name) return;
     const observer = new IntersectionObserver(
-      ([e]) => setPast(!e.isIntersecting && e.boundingClientRect.top < 0),
+      ([e]) => setPast(!e.isIntersecting && e.boundingClientRect.top < 64),
       { rootMargin: "-64px 0px 0px 0px" }
     );
     observer.observe(name);
@@ -73,11 +73,15 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Hide while scrolling down, reveal on the way back up
+  // Hide while scrolling down, reveal on the way back up. While the hero name
+  // is shrinking into the logo the bar stays put and transparent, so the name
+  // never slides under its blur, and it stays until the hero has scrolled away
+  // so the logo that just arrived doesn't vanish right away.
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
-    setHidden(y > prev && y > 160);
-    setScrolled(y > 12);
+    const heroHeight = document.getElementById("top")?.offsetHeight ?? 160;
+    setHidden(showLogo && y > prev && y > heroHeight);
+    setScrolled(showLogo && y > 12);
   });
 
   return (
@@ -96,6 +100,7 @@ export default function Navbar() {
             Hidden while the hero shows the name; stays in the layout so the links don't shift. */}
         <motion.a
           href="#top"
+          data-nav-logo
           aria-label="Ofek Amirav, back to top"
           aria-hidden={!showLogo}
           tabIndex={showLogo ? 0 : -1}
