@@ -33,9 +33,9 @@ export const projects: Project[] = [
     description:
       "A surfboard rental marketplace. I work across the mobile apps, backend integrations and release process, plus an internal back-office for bookings, disputes and transactions.",
     highlight: "Live on Google Play and the App Store, from one Kotlin Multiplatform codebase",
-    color: "#3B7BFF",
-    image: asset("QuiverSync.png"),
-    imagePosition: "center 45%",
+    color: "#007A86",
+    // The promo banner extended to the card's shape, so neither the headline nor the phone is cut
+    image: asset("QuiverSync-card.png"),
     stack: ["Kotlin Multiplatform", "Compose", "SwiftUI", "Firestore", "Next.js"],
     websiteUrl: "https://quiversync.app",
     playStoreUrl: "https://play.google.com/store/apps/details?id=com.quiversync.app",
