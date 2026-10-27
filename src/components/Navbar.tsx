@@ -81,8 +81,11 @@ export default function Navbar() {
     const prev = scrollY.getPrevious() ?? 0;
     const heroHeight = document.getElementById("top")?.offsetHeight ?? 160;
     setHidden(showLogo && y > prev && y > heroHeight);
-    setScrolled(showLogo && y > 12);
+    setScrolled(y > 12);
   });
+  // Combined at render time, so the bar turns solid as soon as the logo
+  // arrives, even if scrolling had already stopped (e.g. after a jump link)
+  const solid = showLogo && scrolled;
 
   return (
     <motion.header
@@ -90,7 +93,7 @@ export default function Navbar() {
       animate={{ y: hidden ? -80 : 0, opacity: 1 }}
       transition={{ duration: 0.5, ease }}
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-300 ${
-        scrolled
+        solid
           ? "border-b border-line/70 bg-bg/75 backdrop-blur-md"
           : "border-b border-transparent"
       }`}
