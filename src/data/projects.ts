@@ -1,0 +1,123 @@
+const asset = (file: string) => `${import.meta.env.BASE_URL}assets/${file}`;
+
+export type Project = {
+  title: string;
+  /** Short context shown under the title, e.g. where the project lives */
+  context?: string;
+  description: string;
+  /** The one thing a reader should remember. Shown in bold next to the project's color. */
+  highlight: string;
+  /** Brand color of the project, used for its number, rail, pill and hover glow */
+  color: string;
+  /** A screenshot, or "agent" for the animated agent-flow illustration */
+  image: string | "agent";
+  /** CSS object-position, to keep the important part of the cover in frame */
+  imagePosition?: string;
+  stack: string[];
+  demoUrl?: string;
+  codeUrl?: string;
+  /** Shown instead of links when there is nothing public to open */
+  status?: string;
+  type: string;
+};
+
+export const projects: Project[] = [
+  {
+    title: "QuiverSync",
+    context: "Product venture · 2025–present",
+    description:
+      "A surfboard rental marketplace. I work across the mobile apps, backend integrations and release process, plus an internal back-office for bookings, disputes and transactions.",
+    highlight: "Live on Google Play and the App Store, from one Kotlin Multiplatform codebase",
+    color: "#3B7BFF",
+    image: asset("QuiverSync.png"),
+    imagePosition: "center 45%",
+    stack: ["Kotlin Multiplatform", "Compose", "SwiftUI", "Firestore", "Next.js"],
+    status: "Live on Google Play & App Store",
+    type: "Multiplatform",
+  },
+  {
+    title: "AI Admin Assistant",
+    context: "QuiverSync back-office",
+    description:
+      "An agent that pulls bookings, transactions, disputes and failure signals into structured workflows, with per-turn tracking of latency, tool failures, tokens and cost.",
+    highlight:
+      "Human-in-the-loop approvals with LangGraph interrupts, tested by a 96-scenario eval suite",
+    color: "#8B5CF6",
+    image: "agent",
+    stack: ["LangGraph", "Python", "Tool Calling", "Agent Evals"],
+    status: "Internal tool",
+    type: "AI Agent",
+  },
+  {
+    title: "RooMatch",
+    description:
+      "Finds apartments and roommates that actually fit. Recommendations adapt to your preferences and interactions.",
+    highlight: "Personal match score for every apartment and roommate",
+    color: "#14B8A6",
+    image: asset("RooMatch-portfoilo.png"),
+    stack: ["Kotlin", "Jetpack Compose", "Ktor", "MongoDB"],
+    demoUrl: "https://www.youtube.com/watch?v=kSwQQ943zFM",
+    codeUrl: "https://github.com/ofekamirav/RooMatchApp",
+    type: "Android",
+  },
+  {
+    title: "RecipeHub",
+    description:
+      "A recipe community website with Google sign-in, a Node backend and a Jest-tested API.",
+    highlight: "AI-generated recipes powered by the Gemini API",
+    color: "#F2643D",
+    image: asset("reciphub.png"),
+    imagePosition: "center top",
+    stack: ["React", "TypeScript", "Node.js", "Gemini API"],
+    demoUrl:
+      "https://www.loom.com/share/8ec9506f4c984e8caf12de8576a2ca4c?sid=e54f7f6c-749c-4627-9403-7597b93ddd99",
+    codeUrl: "https://github.com/ofekamirav/RecipeHub",
+    type: "Web",
+  },
+  {
+    title: "Chargehood",
+    description:
+      "An Android app for finding and managing private EV charging stations, built with MVVM and Firebase.",
+    highlight: "Turns private home chargers into stations anyone nearby can use",
+    color: "#F5B301",
+    image: asset("chargehood.png"),
+    stack: ["Kotlin", "Firebase", "MVVM", "Room"],
+    demoUrl: "https://youtube.com/shorts/DOYsdSXpadM?feature=share",
+    codeUrl: "https://github.com/ofekamirav/ChargehoodApp",
+    type: "Android",
+  },
+];
+
+/** Top row of the skills band */
+export const skills = [
+  "Python",
+  "TypeScript",
+  "Kotlin Multiplatform",
+  "Jetpack Compose",
+  "SwiftUI",
+  "Next.js",
+  "FastAPI",
+  "Node.js",
+  "Firebase",
+  "Redis",
+  "PostgreSQL",
+  "Docker",
+];
+
+/** Bottom row of the skills band */
+export const aiSkills = [
+  "LangGraph",
+  "LangChain",
+  "MCP",
+  "Tool Calling",
+  "Structured Outputs",
+  "Agent Evaluation",
+  "Guardrails",
+  "Prompt Engineering",
+];
+
+export const links = {
+  email: "ofek.amirav@gmail.com",
+  github: "https://github.com/ofekamirav",
+  linkedin: "https://www.linkedin.com/in/ofek-amirav",
+};
