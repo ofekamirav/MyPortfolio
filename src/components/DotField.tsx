@@ -1,7 +1,18 @@
 import { useReducedMotion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
-type Dot = { x: number; y: number; hx: number; hy: number; vx: number; vy: number; r: number; accent: boolean };
+type Dot = {
+  x: number;
+  y: number;
+  hx: number;
+  hy: number;
+  vx: number;
+  vy: number;
+  r: number;
+  /** Opacity, so shadows can recede instead of every dot being equally bright */
+  a: number;
+  accent: boolean;
+};
 
 const GAP = 9; // grid spacing in CSS px for the "o." mark
 const IMAGE_GAP = 7; // denser for a portrait, so a face stays readable
@@ -17,7 +28,8 @@ const cssColor = (name: string) =>
  * Without an image it draws the "o." mark; with one, dark pixels become dots
  * (bigger where darker), so a high-contrast portrait on a light background reads well.
  * In dark mode the dots are light, so a cut-out portrait flips to sizing dots by
- * brightness; otherwise it would read as a photo negative.
+ * brightness (otherwise it would read as a photo negative), with its tones
+ * stretched to the full range and shadows fading out, so the face has depth.
  */
 function sample(
   w: number,
@@ -61,24 +73,55 @@ function sample(
       }
     }
   }
-  const dots: Omit<Dot, "x" | "y" | "vx" | "vy">[] = [];
   const gap = image ? IMAGE_GAP : GAP;
+  const lumAt = (i: number) => (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+  const index = (x: number, y: number) => (Math.floor(y) * w + Math.floor(x)) * 4;
+
+  // Tonal range of the person, used to stretch a flat photo to full contrast
+  let lo = 0;
+  let hi = 1;
+  if (cutout) {
+    const lums: number[] = [];
+    for (let y = gap / 2; y < h; y += gap)
+      for (let x = gap / 2; x < w; x += gap) {
+        const i = index(x, y);
+        if (data[i + 3] > 128) lums.push(lumAt(i));
+      }
+    lums.sort((a, b) => a - b);
+    lo = lums[Math.floor(lums.length * 0.03)] ?? 0;
+    hi = lums[Math.floor(lums.length * 0.97)] ?? 1;
+  }
+
+  const dots: Omit<Dot, "x" | "y" | "vx" | "vy">[] = [];
   for (let y = gap / 2; y < h; y += gap) {
     for (let x = gap / 2; x < w; x += gap) {
       const accent = Math.hypot(x - accentAt.x, y - accentAt.y) < accentAt.r;
       if (accent) {
-        dots.push({ hx: x, hy: y, r: 2.2, accent });
+        dots.push({ hx: x, hy: y, r: 2.2, a: 1, accent });
         continue;
       }
-      const i = (Math.floor(y) * w + Math.floor(x)) * 4;
+      const i = index(x, y);
       const alpha = data[i + 3] / 255;
-      const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
-      // For a photo, a curve keeps skin light and lets eyes, brows and hair stand out
-      // (light dots in dark mode: lit skin gets the big dots, shadows the small ones)
-      const tone = dark && cutout ? Math.pow(lum, 2.2) : Math.pow(1 - lum, 1.35);
-      const ink = image ? alpha * (cutout ? Math.max(0.14, tone) : tone) : alpha;
-      if (ink < (image ? 0.08 : 0.18)) continue;
-      dots.push({ hx: x, hy: y, r: image ? 0.45 + ink * 2.6 : 2.2, accent: false });
+      if (!image) {
+        if (alpha >= 0.18) dots.push({ hx: x, hy: y, r: 2.2, a: 1, accent: false });
+        continue;
+      }
+      if (alpha < 0.08) continue;
+      const lum = lumAt(i);
+      if (cutout) {
+        // Dots grow and strengthen with the "ink" of the theme: in dark mode light
+        // dots follow brightness (lit skin big and bright, shadows small and faint),
+        // in light mode dark dots follow darkness (hair and eyes big, skin faint)
+        const level = Math.min(1, Math.max(0, (lum - lo) / (hi - lo || 1)));
+        const tone = Math.pow(dark ? level : 1 - level, 1.1);
+        dots.push({ hx: x, hy: y, r: 0.8 + tone * 2.3, a: alpha * (0.38 + 0.62 * tone), accent: false });
+        continue;
+      }
+      // Dark dots: a curve keeps skin light and lets eyes, brows and hair stand out
+      const tone = Math.pow(1 - lum, 1.35);
+      const ink = alpha * (cutout ? Math.max(0.14, tone) : tone);
+      if (ink < 0.08) continue;
+      dots.push({ hx: x, hy: y, r: 0.45 + ink * 2.6, a: 1, accent: false });
     }
   }
   return dots;
@@ -111,6 +154,7 @@ export default function DotField({ image, className }: { image?: string | null; 
       ctx.clearRect(0, 0, w, h);
       for (const d of dots) {
         ctx.fillStyle = d.accent ? colors.accent : colors.fg;
+        ctx.globalAlpha = d.a;
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx.fill();
