@@ -1,13 +1,6 @@
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { useRef, type MouseEvent } from "react";
+import { useRef } from "react";
 import { MaskLine, ease } from "../components/Reveal";
 import Typewriter from "../components/Typewriter";
 import { links } from "../data/projects";
@@ -19,61 +12,49 @@ const fade = (delay: number) => ({
 });
 
 const roles = [
-  "Software Developer",
-  "Applied AI Engineer",
   "Mobile Developer",
+  "Applied AI Engineer",
   "Full-Stack Developer",
+  "Software Developer",
 ];
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
-
-  // Soft spotlight that trails the cursor (desktop only, purely decorative)
-  const mx = useMotionValue(-400);
-  const my = useMotionValue(-400);
-  const x = useSpring(mx, { stiffness: 80, damping: 20 });
-  const y = useSpring(my, { stiffness: 80, damping: 20 });
-  const spotlight = useMotionTemplate`radial-gradient(420px circle at ${x}px ${y}px, rgb(var(--accent) / 0.08), transparent 70%)`;
 
   // As you scroll past the hero, its content drifts up and fades out
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const onMove = (e: MouseEvent<HTMLElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set(e.clientX - r.left);
-    my.set(e.clientY - r.top);
-  };
-
   return (
     <section
       id="top"
       ref={ref}
-      onMouseMove={onMove}
       className="relative flex min-h-[92svh] items-end overflow-hidden pb-16 pt-32 sm:items-center sm:pb-0"
     >
-      <motion.div
-        aria-hidden
-        style={{ background: spotlight }}
-        className="pointer-events-none absolute inset-0 hidden md:block"
-      />
-
       <motion.div style={{ y: contentY, opacity: contentOpacity }} className="container-x relative">
-        <motion.img
-          {...fade(0.1)}
-          src={`${import.meta.env.BASE_URL}assets/ofek.jpg`}
-          alt="Ofek Amirav"
-          className="mb-10 h-12 w-12 rounded-full object-cover grayscale transition duration-500 hover:grayscale-0"
-        />
+        {/* Portrait in a thin ring, with the accent dot used across the site */}
+        <motion.div {...fade(0.1)} className="group relative mb-10 h-[72px] w-[72px]">
+          <div className="h-full w-full rounded-full border border-line bg-bg p-1 transition-colors duration-500 group-hover:border-accent/50">
+            <img
+              src={`${import.meta.env.BASE_URL}assets/ofek.jpg`}
+              alt="Ofek Amirav"
+              className="h-full w-full rounded-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
+            />
+          </div>
+          <span
+            aria-hidden
+            className="absolute bottom-1 right-1 h-3 w-3 rounded-full border-2 border-bg bg-accent"
+          />
+        </motion.div>
 
         <h1 className="font-medium tracking-tightest">
-          <MaskLine delay={0.2} className="text-[clamp(2.75rem,9vw,6.5rem)] leading-[0.95]">
+          <MaskLine delay={0.2} className="text-[clamp(2.75rem,8vw,8.5rem)] leading-[0.95]">
             Ofek Amirav
           </MaskLine>
           <motion.span
             {...fade(0.5)}
-            className="mt-2 block min-h-[1.1em] text-[clamp(1.75rem,5.5vw,4rem)] leading-[1.1] text-muted"
+            className="mt-2 block min-h-[1.1em] text-[clamp(1.75rem,4.8vw,5rem)] leading-[1.1] text-muted"
           >
             <Typewriter words={roles} startDelay={1000} />
           </motion.span>
@@ -81,10 +62,10 @@ export default function Hero() {
 
         <motion.p
           {...fade(0.7)}
-          className="mt-8 max-w-md text-base leading-relaxed text-muted sm:text-lg"
+          className="mt-8 max-w-md text-base leading-relaxed text-muted sm:text-lg xl:max-w-lg xl:text-xl"
         >
-          I build AI agents, backend services and cross-platform apps. Currently
-          shipping QuiverSync, live on Google Play and the App Store.
+          I build mobile apps for Android and iOS, plus the backends and AI agents
+          behind them. Currently shipping QuiverSync, live on Google Play and the App Store.
         </motion.p>
 
         <motion.div

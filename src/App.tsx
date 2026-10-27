@@ -1,5 +1,6 @@
 import { MotionConfig, motion, useScroll, useSpring } from "framer-motion";
 import Navbar from "./components/Navbar";
+import Spotlight from "./components/Spotlight";
 import Hero from "./sections/Hero";
 import Projects from "./sections/Projects";
 import Stack from "./sections/Stack";
@@ -22,8 +23,9 @@ export default function App() {
     // Respect the OS "reduce motion" setting for every animation
     <MotionConfig reducedMotion="user">
       <ScrollProgress />
+      <Spotlight />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <Projects />
         <Stack />

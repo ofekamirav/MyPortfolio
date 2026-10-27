@@ -15,7 +15,7 @@ import { projects, type Project } from "../data/projects";
 /** The one line a reader should remember about the project. */
 function Highlight({ text, color }: { text: string; color: string }) {
   return (
-    <p className="relative mt-6 max-w-sm pl-4 text-[15px] font-medium leading-relaxed text-fg">
+    <p className="relative mt-6 max-w-sm pl-4 text-[15px] xl:max-w-md xl:text-base font-medium leading-relaxed text-fg">
       <span
         className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full"
         style={{ background: color }}
@@ -169,6 +169,10 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
                 aria-hidden
               />
               {project.type}
+              <span className="text-muted/60" aria-hidden>
+                ·
+              </span>
+              <span className="tabular-nums">{project.year}</span>
             </span>
           </Reveal>
 
@@ -188,7 +192,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
           </Reveal>
 
           <Reveal delay={0.3} y={16}>
-            <p className="mt-4 max-w-sm leading-relaxed text-muted">{project.description}</p>
+            <p className="mt-4 max-w-sm leading-relaxed text-muted xl:max-w-md">{project.description}</p>
           </Reveal>
 
           <ul className="mt-6 flex flex-wrap gap-2">
@@ -274,7 +278,7 @@ export default function Projects() {
         <div ref={ref} className="mb-10 flex items-end justify-between gap-6 sm:mb-14">
           <motion.h2
             style={{ x: headingX }}
-            className="text-[clamp(2.75rem,10vw,7.5rem)] font-medium leading-[0.9] tracking-tightest"
+            className="text-[clamp(2.75rem,9vw,10rem)] font-medium leading-[0.9] tracking-tightest"
           >
             <MaskLine inView>Selected</MaskLine>
             <MaskLine inView delay={0.1} className="text-muted">

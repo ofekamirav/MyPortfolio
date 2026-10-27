@@ -98,7 +98,7 @@ export default function Contact() {
               <h2 className="label">Contact</h2>
             </Reveal>
 
-            <p className="mt-8 text-[clamp(2.25rem,6vw,4.5rem)] font-medium leading-[1] tracking-tightest">
+            <p className="mt-8 text-[clamp(2.25rem,5vw,5.5rem)] font-medium leading-[1] tracking-tightest">
               <MaskLine inView>Let's build</MaskLine>
               <MaskLine inView delay={0.12} className="text-muted">
                 something good<span className="text-accent">.</span>
@@ -223,7 +223,7 @@ export default function Contact() {
         </div>
 
         <footer className="mt-24 flex flex-col-reverse gap-4 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-mono text-xs">© {new Date().getFullYear()} Ofek Amirav · Tel Aviv</span>
+          <span className="font-mono text-xs">© {new Date().getFullYear()} Ofek Amirav</span>
           <div className="flex gap-6">
             {[
               ["Email", `mailto:${links.email}`],

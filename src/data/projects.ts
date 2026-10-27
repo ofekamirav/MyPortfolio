@@ -22,12 +22,14 @@ export type Project = {
   /** Shown instead of links when there is nothing public to open */
   status?: string;
   type: string;
+  /** When the project was built, so older tech reads in context */
+  year: string;
 };
 
 export const projects: Project[] = [
   {
     title: "QuiverSync",
-    context: "Product venture · 2025–present",
+    context: "Product venture",
     description:
       "A surfboard rental marketplace. I work across the mobile apps, backend integrations and release process, plus an internal back-office for bookings, disputes and transactions.",
     highlight: "Live on Google Play and the App Store, from one Kotlin Multiplatform codebase",
@@ -39,6 +41,22 @@ export const projects: Project[] = [
     playStoreUrl: "https://play.google.com/store/apps/details?id=com.quiversync.app",
     appStoreUrl: "https://apps.apple.com/app/id6762154301",
     type: "Multiplatform",
+    year: "2025–now",
+  },
+  {
+    title: "Mumlatz",
+    context: "Live product",
+    description:
+      "Checks whether ChatGPT, Gemini, Perplexity, Claude and Google AI Overviews recommend a local Israeli business, shows who they recommend instead, and writes the fixes that improve its odds.",
+    highlight:
+      "Answers from five AI engines, grounded and scored by a queue-based worker pipeline",
+    color: "#0F6E5C",
+    image: asset("mumlatz.png"),
+    imagePosition: "center top",
+    stack: ["Next.js", "TypeScript", "Supabase", "BullMQ", "LLM APIs"],
+    websiteUrl: "https://mumlatz.com",
+    type: "AI · Web",
+    year: "2026",
   },
   {
     title: "AI Admin Assistant",
@@ -52,6 +70,7 @@ export const projects: Project[] = [
     stack: ["LangGraph", "Python", "Tool Calling", "Agent Evals"],
     status: "Internal tool",
     type: "AI Agent",
+    year: "2026",
   },
   {
     title: "RooMatch",
@@ -64,20 +83,7 @@ export const projects: Project[] = [
     demoUrl: "https://www.youtube.com/watch?v=kSwQQ943zFM",
     codeUrl: "https://github.com/ofekamirav/RooMatchApp",
     type: "Android",
-  },
-  {
-    title: "RecipeHub",
-    description:
-      "A recipe community website with Google sign-in, a Node backend and a Jest-tested API.",
-    highlight: "AI-generated recipes powered by the Gemini API",
-    color: "#F2643D",
-    image: asset("reciphub.png"),
-    imagePosition: "center top",
-    stack: ["React", "TypeScript", "Node.js", "Gemini API"],
-    demoUrl:
-      "https://www.loom.com/share/8ec9506f4c984e8caf12de8576a2ca4c?sid=e54f7f6c-749c-4627-9403-7597b93ddd99",
-    codeUrl: "https://github.com/ofekamirav/RecipeHub",
-    type: "Web",
+    year: "2025",
   },
   {
     title: "Chargehood",
@@ -90,6 +96,7 @@ export const projects: Project[] = [
     demoUrl: "https://youtube.com/shorts/DOYsdSXpadM?feature=share",
     codeUrl: "https://github.com/ofekamirav/ChargehoodApp",
     type: "Android",
+    year: "2025",
   },
 ];
 
