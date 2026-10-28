@@ -176,7 +176,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
             </span>
           </Reveal>
 
-          <h3 className="mt-6 text-4xl font-medium tracking-tight sm:text-5xl">
+          <h3 className="mt-6 font-display text-4xl font-normal tracking-tight sm:text-5xl">
             <MaskLine inView delay={0.1}>
               {project.title}
             </MaskLine>
@@ -278,7 +278,7 @@ export default function Projects() {
         <div ref={ref} className="mb-10 flex items-end justify-between gap-6 sm:mb-14">
           <motion.h2
             style={{ x: headingX }}
-            className="text-[clamp(2.75rem,9vw,10rem)] font-medium leading-[0.9] tracking-tightest"
+            className="font-display text-[clamp(2.75rem,9vw,10rem)] font-normal leading-[0.9] tracking-tight"
           >
             <MaskLine inView>Selected</MaskLine>
             <MaskLine inView delay={0.1} className="text-muted">

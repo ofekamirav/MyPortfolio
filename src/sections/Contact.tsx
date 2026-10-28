@@ -98,7 +98,7 @@ export default function Contact() {
               <h2 className="label">Contact</h2>
             </Reveal>
 
-            <p className="mt-8 text-[clamp(2.25rem,5vw,5.5rem)] font-medium leading-[1] tracking-tightest">
+            <p className="mt-8 font-display text-[clamp(2.25rem,4.2vw,4.75rem)] font-normal leading-[1] tracking-tight">
               <MaskLine inView>Let's build</MaskLine>
               <MaskLine inView delay={0.12} className="text-muted">
                 something good<span className="text-accent">.</span>

@@ -2,13 +2,14 @@ import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScrol
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { MaskLine } from "./Reveal";
 
-const BASE_WEIGHT = 500;
-const MAX_WEIGHT = 800;
-const REACH = 260; // px from a letter's center where the cursor starts to thicken it
+const LIFT = 0.08; // em a letter rises when the cursor is right on it
+const GROW = 0.06; // extra scale at the same point
+const REACH = 260; // px from a letter's center where the cursor starts to lift it
 
 /**
- * The hero's big name. Each letter thickens as the cursor gets close
- * (Geist is a variable font), and on scroll the name shrinks into the
+ * The hero's big name. Each letter lifts and grows slightly as the cursor
+ * gets close (the heading font has a single weight, so this stands in for a
+ * weight change), and on scroll the name shrinks into the
  * navbar's "ofek." wordmark, which takes over once it arrives.
  */
 export default function HeroName({ text, className }: { text: string; className?: string }) {
@@ -64,7 +65,7 @@ export default function HeroName({ text, className }: { text: string; className?
   const [handedOff, setHandedOff] = useState(false);
   useMotionValueEvent(progress, "change", (p) => setHandedOff(p >= 1));
 
-  // Letter weights follow the cursor; written straight to the DOM to skip re-renders
+  // Letters rise toward the cursor; written straight to the DOM to skip re-renders
   useEffect(() => {
     if (reduced) return;
     let frame = 0;
@@ -77,7 +78,8 @@ export default function HeroName({ text, className }: { text: string; className?
         const r = el.getBoundingClientRect();
         const dist = Math.hypot(r.left + r.width / 2 - last.clientX, r.top + r.height / 2 - last.clientY);
         const t = Math.max(0, 1 - dist / REACH);
-        el.style.fontVariationSettings = `'wght' ${Math.round(BASE_WEIGHT + (MAX_WEIGHT - BASE_WEIGHT) * t * t)}`;
+        const k = t * t;
+        el.style.transform = k ? `translateY(${-LIFT * k}em) scale(${1 + GROW * k})` : "";
       }
     };
     const onMove = (e: PointerEvent) => {
@@ -87,7 +89,7 @@ export default function HeroName({ text, className }: { text: string; className?
     };
     const reset = () => {
       last = null;
-      letters.current.forEach((el) => el && (el.style.fontVariationSettings = ""));
+      letters.current.forEach((el) => el && (el.style.transform = ""));
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", reset);
@@ -109,7 +111,7 @@ export default function HeroName({ text, className }: { text: string; className?
           ref={(el) => {
             letters.current[index] = el;
           }}
-          className="inline-block transition-[font-variation-settings] duration-300 ease-out"
+          className="inline-block origin-bottom transition-transform duration-300 ease-out"
         >
           {ch}
         </span>
