@@ -60,8 +60,6 @@ export default function Hero() {
             >
               Mobile developer building Android and iOS apps with Kotlin Multiplatform,
               along with the backend services and AI features that support them.
-              Currently working on QuiverSync, a surfboard rental marketplace available
-              on Google Play and the App Store.
             </motion.p>
 
             <motion.div

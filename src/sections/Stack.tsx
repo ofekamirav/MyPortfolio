@@ -16,7 +16,7 @@ function Row({
       {[...items, ...items, ...items].map((s, i) => (
         <span
           key={i}
-          className={`flex items-center gap-8 text-4xl font-medium tracking-tight sm:text-6xl ${
+          className={`flex items-center gap-8 font-display text-4xl font-normal tracking-tight sm:text-6xl ${
             muted ? "text-muted/40" : "text-fg"
           }`}
         >
