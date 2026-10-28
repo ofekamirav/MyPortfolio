@@ -17,6 +17,8 @@ export default {
       fontFamily: {
         sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["Geist Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+        // Headings. Faculty Glyphic has a single weight, so pair it with font-normal
+        display: ["Faculty Glyphic", "Georgia", "serif"],
       },
       letterSpacing: {
         tightest: "-0.045em",

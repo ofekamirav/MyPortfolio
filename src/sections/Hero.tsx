@@ -39,7 +39,10 @@ export default function Hero() {
       <div className="container-x relative grid items-center gap-y-6 lg:grid-cols-12 lg:gap-x-10">
         <div className="lg:col-span-7">
           <h1 className="font-medium tracking-tightest">
-            <HeroName text="Ofek Amirav" className="text-[clamp(2.75rem,7.4vw,8.5rem)] leading-[0.95]" />
+            <HeroName
+              text="Ofek Amirav"
+              className="font-display text-[clamp(2.75rem,7.4vw,8.5rem)] font-normal leading-[0.95] tracking-tight"
+            />
             <motion.span style={{ opacity: contentOpacity }} className="block">
               <motion.span
                 {...fade(0.5)}
@@ -55,9 +58,10 @@ export default function Hero() {
               {...fade(0.7)}
               className="mt-8 max-w-md text-base leading-relaxed text-muted sm:text-lg xl:max-w-lg xl:text-xl"
             >
-              I build Android and iOS apps from a single Kotlin Multiplatform codebase,
-              plus the backends and AI agents behind them. Right now I'm shipping
-              QuiverSync, a surfboard rental marketplace on both app stores.
+              Mobile developer building Android and iOS apps with Kotlin Multiplatform,
+              along with the backend services and AI features that support them.
+              Currently working on QuiverSync, a surfboard rental marketplace available
+              on Google Play and the App Store.
             </motion.p>
 
             <motion.div

@@ -110,7 +110,7 @@ export default function Navbar() {
           initial={false}
           animate={showLogo ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
           transition={{ duration: 0.35, ease }}
-          className={`group text-xl font-medium tracking-tightest ${showLogo ? "" : "pointer-events-none"}`}
+          className={`group font-display text-xl font-normal tracking-tight ${showLogo ? "" : "pointer-events-none"}`}
         >
           ofek
           <span className="inline-block text-accent transition-transform duration-300 ease-out group-hover:-translate-y-1">
