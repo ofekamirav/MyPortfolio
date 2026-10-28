@@ -58,10 +58,8 @@ export default function Hero() {
               {...fade(0.7)}
               className="mt-8 max-w-md text-base leading-relaxed text-muted sm:text-lg xl:max-w-lg xl:text-xl"
             >
-              Mobile developer building Android and iOS apps with Kotlin Multiplatform,
-              along with the backend services and AI features that support them.
-              Currently working on QuiverSync, a surfboard rental marketplace available
-              on Google Play and the App Store.
+              I build Android and iOS apps with Kotlin Multiplatform, along with the
+              backend services and AI features that support them.
             </motion.p>
 
             <motion.div
